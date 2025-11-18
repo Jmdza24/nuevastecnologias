@@ -100,3 +100,4 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: ghcr.io/jmdza24/gestortickets:latest
+
