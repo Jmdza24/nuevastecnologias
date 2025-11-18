@@ -23,20 +23,22 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Establecer directorio de trabajo
 WORKDIR /var/www
 
-# Copiar solo composer.* primero (optimiza cache)
+# Copiar archivo composer
 COPY composer.json composer.lock ./
 
-# Instalar dependencias PHP sin dev
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+# Instalar dependencias sin ejecutar scripts
+RUN composer install --no-dev --no-interaction --no-scripts --prefer-dist --optimize-autoloader
 
-# Copiar el resto del proyecto
+# Copiar todo el proyecto
 COPY . .
 
-# Dar permisos correctos
+# Ejecutar scripts de composer YA con artisan presente
+RUN composer run-script post-autoload-dump || true
+
+# Permisos
 RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www/storage /var/www/bootstrap/cache
 
-# Comando por defecto
 CMD ["php-fpm"]
 
 EXPOSE 9000
