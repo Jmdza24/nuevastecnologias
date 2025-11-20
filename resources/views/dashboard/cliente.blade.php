@@ -1,9 +1,31 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard Cliente')
+@section('title', 'Panel Cliente')
 
 @section('content')
-<div class="container mt-5">
-    <h1 class="text-center">Bienvenido, Cliente</h1>
+<div class="container mt-4">
+
+    <h2 class="fw-bold mb-4">🙋 Panel del Cliente</h2>
+
+    <div class="row g-3">
+        <x-dashboard-card title="Mis tickets" :value="$total" color="primary"/>
+        <x-dashboard-card title="Abiertos" :value="$abiertos" color="success"/>
+        <x-dashboard-card title="Esperando respuesta" :value="$esperando" color="warning"/>
+        <x-dashboard-card title="Resueltos" :value="$resueltos" color="info"/>
+        <x-dashboard-card title="Cerrados" :value="$cerrados" color="secondary"/>
+    </div>
+
+    <hr class="my-4">
+
+    <h4 class="fw-bold">📌 Mis tickets recientes</h4>
+
+    <ul class="list-group">
+        @foreach($misTickets as $t)
+            <li class="list-group-item d-flex justify-content-between">
+                <span>#{{ $t->id }} — {{ $t->subject }}</span>
+                <a href="{{ route('tickets.show', $t) }}" class="btn btn-sm btn-outline-primary">Ver</a>
+            </li>
+        @endforeach
+    </ul>
 </div>
 @endsection

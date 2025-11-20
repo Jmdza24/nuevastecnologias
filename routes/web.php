@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,9 +41,8 @@ Route::post('/logout', [AuthController::class, 'logout'])
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
 
-    Route::get('/dashboard/admin', function () {
-        return view('dashboard.admin');
-    })->name('admin.dashboard');
+    // Dashboard del admin
+    Route::get('/dashboard/admin', [DashboardController::class, 'admin'])->name('admin.dashboard');
 
     // Tickets del admin
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
@@ -60,9 +60,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 Route::middleware(['auth', 'role:tecnico'])->group(function () {
 
-    Route::get('/dashboard/tecnico', function () {
-        return view('dashboard.tecnico');
-    })->name('tecnico.dashboard');
+    // Dashboard del técnico
+    Route::get('/dashboard/tecnico', [DashboardController::class, 'tecnico'])->name('tecnico.dashboard');
 
     // Tickets del técnico
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
@@ -80,9 +79,8 @@ Route::middleware(['auth', 'role:tecnico'])->group(function () {
 
 Route::middleware(['auth', 'role:cliente'])->group(function () {
 
-    Route::get('/dashboard/cliente', function () {
-        return view('dashboard.cliente');
-    })->name('cliente.dashboard');
+    // Dashboard del cliente
+    Route::get('/dashboard/cliente', [DashboardController::class, 'cliente'])->name('cliente.dashboard');
 
     // Tickets del cliente
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
