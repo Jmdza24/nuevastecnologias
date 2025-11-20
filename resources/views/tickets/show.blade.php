@@ -3,9 +3,14 @@
 @section('content')
 <div class="container mt-5">
 
-    <h2 class="fw-bold mb-4">
-        <i class="bi bi-ticket-detailed"></i> Ticket #{{ $ticket->id }}
-    </h2>
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="fw-bold mb-4">
+            <i class="bi bi-ticket-detailed"></i> Ticket #{{ $ticket->id }}
+        </h2>
+        <a href="{{ route('tickets.index') }}" class="btn btn-secondary mb-4">
+            <i class="bi bi-arrow-left"></i> Volver al listado
+        </a>
+    </div>
 
     <div class="row">
 
@@ -44,7 +49,7 @@
                     <hr>
 
                     <!-- Acciones -->
-                    @include('tickets.partials.actions')
+                    @include('tickets.partials.actions', ['ticket' => $ticket, 'user' => $user])
 
                 </div>
             </div>

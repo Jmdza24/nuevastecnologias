@@ -12,6 +12,11 @@ class AuthController extends Controller
     // Vista login
     public function showLogin()
     {
+        if (Auth::check()) {
+            return redirect()->route(Auth::user()->role . '.dashboard');
+        }
+
+
         return view('auth.login');
     }
 
@@ -19,31 +24,36 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required'],
-            'password' => ['required']
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            // Redirección por rol
-            $user = Auth::user();
-
-            if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard');
-            }
-
-            if ($user->role === 'tecnico') {
-                return redirect()->route('tecnico.dashboard');
-            }
-
-            return redirect()->route('cliente.dashboard');
+        // Intento de login
+        if (!Auth::attempt($credentials)) {
+            return back()->withErrors(['email' => 'Credenciales incorrectas']);
         }
 
-        return back()->withErrors([
-            'email' => 'Credenciales incorrectas.',
-        ]);
+        // Usuario autenticado
+        $user = Auth::user();
+
+        // Verificar si está activo
+        if (!$user->active) {
+            Auth::logout();
+            return back()->withErrors(['email' => 'Este usuario está inactivo. Contacte al administrador.']);
+        }
+
+        // Redirección por rol
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        if ($user->role === 'tecnico') {
+            return redirect()->route('tecnico.dashboard');
+        }
+
+        return redirect()->route('cliente.dashboard');
     }
+
 
     // Vista registro
     public function showRegister()

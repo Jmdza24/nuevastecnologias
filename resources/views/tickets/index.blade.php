@@ -174,12 +174,20 @@
                                 @endif
 
                                 <!-- Editar para técnicos y admin -->
-                                @if($user->role === 'tecnico' || $user->role === 'admin')
+                                {{-- ADMIN puede editar todos --}}
+                                @if($user->role === 'admin')
                                     <a href="{{ route('tickets.edit', $ticket) }}" class="btn btn-sm btn-warning">
                                         <i class="bi bi-pencil-square"></i> Editar
                                     </a>
-
                                 @endif
+
+                                {{-- TÉCNICO solo puede editar tickets ASIGNADOS --}}
+                                @if($user->role === 'tecnico' && $ticket->assigned_to == $user->id)
+                                    <a href="{{ route('tickets.edit', $ticket) }}" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil-square"></i> Editar
+                                    </a>
+                                @endif
+
 
                                 <!-- Cerrar para cliente -->
                                 @if($user->role === 'cliente' && $ticket->status !== 'closed')
